@@ -8,21 +8,47 @@ Focus: Attack Simulation • SIEM Detection • Incident Investigation
 
 ---
 
+# Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Lab Architecture](#lab-architecture)
+3. [Telemetry Collection](#telemetry-collection)
+4. [Attack Simulation](#attack-simulation)
+5. [Stage 1 – Initial Access](#stage-1--initial-access)
+6. [Stage 2 – Execution](#stage-2--execution)
+7. [Stage 3 – Persistence](#stage-3--persistence)
+8. [Stage 4 – Defense Evasion](#stage-4--defense-evasion)
+9. [Stage 5 – Command and Control](#stage-5--command-and-control)
+10. [Detection Engineering](#detection-engineering)
+11. [Correlation Rules](#correlation-rules)
+12. [Threat Hunting Queries](#threat-hunting-queries)
+13. [Indicators of Compromise (IOCs)](#indicators-of-compromise-iocs)
+14. [Attack Timeline](#attack-timeline)
+15. [Detection Logic Explanation](#detection-logic-explanation)
+16. [Purple Team Validation](#purple-team-validation)
+17. [Detection Coverage Matrix](#detection-coverage-matrix)
+18. [SOC Investigation Workflow](#soc-investigation-workflow)
+19. [Incident Response Actions](#incident-response-actions)
+20. [Technologies Used](#technologies-used)
+21. [Skills Demonstrated](#skills-demonstrated)
+22. [Future Improvements](#future-improvements)
+23. [Author](#author)
+
+---
+
 # Project Overview
 
 This project demonstrates **end-to-end detection of a multi-stage cyber attack** using **Wazuh** and **Sysmon**.
 
-The lab simulates a realistic adversary attack chain and demonstrates how a **Security Operations Center (SOC)** detects, correlates, and investigates malicious activity using centralized logging and detection engineering.
+It simulates a realistic adversary attack chain and shows how a **Security Operations Center (SOC)** detects, correlates, and investigates malicious activity using centralized logging and detection engineering. The attack lifecycle follows the **MITRE ATT&CK** framework.
 
-The attack lifecycle follows techniques from the **MITRE ATT&CK** framework.
+Attack stages simulated:
 
-Attack stages simulated in this project:
-
-1. Initial Access
-2. Execution
-3. Persistence
-4. Defense Evasion
-5. Command and Control
+* Initial Access
+* Execution
+* Persistence
+* Defense Evasion
+* Command and Control
 
 ---
 
@@ -30,7 +56,7 @@ Attack stages simulated in this project:
 
 The environment simulates attacker, victim, and monitoring infrastructure.
 
-```
+```text
 Kali Linux (Attacker)
         │
         │ Attack Simulation
@@ -49,7 +75,6 @@ Wazuh Dashboard
 ### Architecture Screenshot
 
 ![Lab Architecture](screenshots/lab-architecture.png)
-
 *(Insert diagram showing attacker, victim, and Wazuh manager)*
 
 ---
@@ -74,14 +99,13 @@ These logs are forwarded to Wazuh for analysis.
 ### Sysmon Logging Screenshot
 
 ![Sysmon Logs](screenshots/sysmon-events.png)
-
 *(Insert screenshot showing Sysmon event viewer logs)*
 
 ---
 
 # Attack Simulation
 
-The simulated adversary executes a multi-stage attack chain designed to replicate real-world intrusion behavior.
+The simulated adversary executes a multi-stage attack chain to replicate real-world intrusion behavior.
 
 ---
 
@@ -89,20 +113,15 @@ The simulated adversary executes a multi-stage attack chain designed to replicat
 
 The attacker executes a malicious encoded PowerShell payload.
 
-Example command:
-
 ```powershell
 powershell -enc <encoded_payload>
 ```
 
-MITRE Technique:
-
-T1059 – Command and Scripting Interpreter
+MITRE Technique: T1059 – Command and Scripting Interpreter
 
 ### Attack Execution Screenshot
 
 ![PowerShell Attack](screenshots/powershell-attack.png)
-
 *(Insert screenshot showing encoded PowerShell command execution)*
 
 ---
@@ -111,22 +130,17 @@ T1059 – Command and Scripting Interpreter
 
 The attacker performs reconnaissance commands on the compromised system.
 
-Example commands:
-
-```
+```text
 whoami
 net user
 ipconfig
 ```
 
-Telemetry Source:
-
-Sysmon Event ID 1
+Telemetry Source: Sysmon Event ID 1
 
 ### Reconnaissance Screenshot
 
 ![Recon Commands](screenshots/recon-commands.png)
-
 *(Insert screenshot showing attacker commands executed)*
 
 ---
@@ -135,20 +149,15 @@ Sysmon Event ID 1
 
 The attacker creates a scheduled task to maintain persistence.
 
-Example command:
-
-```
+```text
 schtasks /create /sc minute /tn updater /tr malware.exe
 ```
 
-MITRE Technique:
-
-T1053 – Scheduled Task
+MITRE Technique: T1053 – Scheduled Task
 
 ### Persistence Screenshot
 
 ![Persistence](screenshots/persistence-task.png)
-
 *(Insert screenshot showing scheduled task creation)*
 
 ---
@@ -157,20 +166,15 @@ T1053 – Scheduled Task
 
 The attacker attempts to disable monitoring tools.
 
-Example command:
-
-```
+```text
 Stop-Service Sysmon
 ```
 
-MITRE Technique:
-
-T1562 – Impair Defenses
+MITRE Technique: T1562 – Impair Defenses
 
 ### Defense Evasion Screenshot
 
 ![Defense Evasion](screenshots/sysmon-stop.png)
-
 *(Insert screenshot showing attempt to stop Sysmon)*
 
 ---
@@ -179,20 +183,15 @@ T1562 – Impair Defenses
 
 The attacker establishes a reverse shell connection.
 
-Listener on attacker machine:
-
-```
+```text
 nc -lvnp 4444
 ```
 
-MITRE Technique:
-
-T1071 – Command and Control
+MITRE Technique: T1071 – Command and Control
 
 ### Reverse Shell Screenshot
 
 ![Reverse Shell](screenshots/reverse-shell.png)
-
 *(Insert screenshot showing attacker shell session)*
 
 ---
@@ -214,12 +213,11 @@ Custom Wazuh detection rules identify malicious activity.
 ### Detection Screenshot
 
 ![Wazuh Detection](screenshots/wazuh-powershell-alert.png)
-
 *(Insert screenshot showing alert triggered in Wazuh)*
 
 ---
 
-# Scheduled Task Persistence Detection
+### Scheduled Task Persistence Detection
 
 ```xml
 <rule id="100101" level="10">
@@ -234,7 +232,7 @@ Custom Wazuh detection rules identify malicious activity.
 
 ---
 
-# Defense Evasion Detection
+### Defense Evasion Detection
 
 ```xml
 <rule id="100102" level="12">
@@ -251,7 +249,7 @@ Custom Wazuh detection rules identify malicious activity.
 
 # Correlation Rules
 
-Correlation rules detect attack patterns across multiple events.
+Detect multi-stage attack patterns across events.
 
 ```xml
 <rule id="100200" level="15" frequency="3" timeframe="120">
@@ -262,8 +260,6 @@ Correlation rules detect attack patterns across multiple events.
 </rule>
 ```
 
-If multiple suspicious activities occur within the timeframe, a **high-severity alert is triggered**.
-
 ### Correlated Alert Screenshot
 
 ![Correlation Alert](screenshots/correlation-alert.png)
@@ -272,23 +268,108 @@ If multiple suspicious activities occur within the timeframe, a **high-severity 
 
 # Threat Hunting Queries
 
-Threat hunting was used to proactively search for malicious behavior.
+Proactively searching for suspicious behavior.
 
-### PowerShell Abuse Hunting
+### PowerShell Abuse
 
-```
+```text
 powershell AND ("-enc" OR "Invoke-WebRequest")
 ```
 
 ### Reverse Shell Hunting
 
-```
+```text
 destination_port:4444
 ```
 
 ### Threat Hunting Screenshot
 
 ![Threat Hunting](screenshots/threat-hunting.png)
+
+---
+
+# Indicators of Compromise (IOCs)
+
+| IOC Type | Indicator           | Description                         |
+| -------- | ------------------- | ----------------------------------- |
+| Process  | powershell.exe -enc | Encoded PowerShell command          |
+| Command  | schtasks /create    | Persistence via scheduled task      |
+| Service  | Stop-Service Sysmon | Attempt to disable monitoring       |
+| Network  | Port 4444           | Reverse shell communication         |
+| Tool     | nc.exe              | Netcat used for command and control |
+
+### IOC Investigation Screenshot
+
+![IOC Analysis](screenshots/ioc-analysis.png)
+
+---
+
+# Attack Timeline
+
+| Time  | Event                                   |
+| ----- | --------------------------------------- |
+| 10:12 | Encoded PowerShell payload executed     |
+| 10:13 | System reconnaissance commands executed |
+| 10:14 | Scheduled task persistence created      |
+| 10:15 | Reverse shell connection established    |
+| 10:16 | Monitoring tools targeted for shutdown  |
+
+### Attack Timeline Screenshot
+
+![Attack Timeline](screenshots/attack-timeline.png)
+
+---
+
+# Detection Logic Explanation
+
+### Detection Strategy
+
+1. **Suspicious Command Execution** – detect encoded PowerShell:
+   `powershell AND "-enc"`
+
+2. **Persistence Detection** – monitor scheduled task creation:
+   `schtasks /create`
+
+3. **Security Tool Tampering** – detect attempts to stop monitoring:
+   `Stop-Service Sysmon`
+
+### Detection Logic Screenshot
+
+![Detection Logic](screenshots/detection-logic.png)
+
+---
+
+# Purple Team Validation
+
+| Attack Technique   | Command Used          | Detection Result          |
+| ------------------ | --------------------- | ------------------------- |
+| Encoded PowerShell | `powershell -enc`     | Alert Triggered           |
+| Recon Commands     | `whoami`, `net user`  | Logged                    |
+| Persistence        | `schtasks /create`    | Alert Triggered           |
+| Defense Evasion    | `Stop-Service Sysmon` | Alert Triggered           |
+| Reverse Shell      | `nc -lvnp 4444`       | Network Activity Detected |
+
+### Purple Team Workflow
+
+```text
+Attacker Action
+      │
+      ▼
+Sysmon Log Generated
+      │
+      ▼
+Wazuh Agent Forwarded Log
+      │
+      ▼
+Wazuh Detection Rule Triggered
+      │
+      ▼
+Alert Displayed in Dashboard
+```
+
+### Purple Team Validation Screenshot
+
+![Purple Team Validation](screenshots/purple-team-validation.png)
 
 ---
 
@@ -305,21 +386,12 @@ destination_port:4444
 
 # SOC Investigation Workflow
 
-Example investigation timeline:
-
-```
-10:12  Encoded PowerShell executed
-10:13  Recon commands executed
-10:14  Persistence created
-10:15  Reverse shell established
-```
-
-SOC analyst steps:
-
-1. Review process creation logs
-2. Identify suspicious PowerShell execution
-3. Investigate persistence mechanisms
-4. Analyze network activity
+| Time  | Event                       |
+| ----- | --------------------------- |
+| 10:12 | Encoded PowerShell executed |
+| 10:13 | Recon commands executed     |
+| 10:14 | Persistence created         |
+| 10:15 | Reverse shell established   |
 
 ### Investigation Screenshot
 
@@ -329,16 +401,14 @@ SOC analyst steps:
 
 # Incident Response Actions
 
-Recommended response actions:
-
 1. Isolate compromised host
 2. Terminate malicious processes
 3. Remove persistence mechanisms
 4. Reset compromised credentials
 
-Example investigation commands:
+### Investigation Commands
 
-```
+```text
 tasklist /v
 netstat -ano
 ```
@@ -355,4 +425,5 @@ netstat -ano
 
 ---
 
-If you want, I can also show you **how to make your GitHub repo look extremely elite with 5 small additions (badges, diagrams, and alert samples) that immediately grab recruiters’ attention**.
+
+Do you want me to do that next?
