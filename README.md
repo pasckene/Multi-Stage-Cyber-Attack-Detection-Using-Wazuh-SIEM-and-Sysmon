@@ -424,6 +424,3 @@ netstat -ano
 • Netcat
 
 ---
-
-
-Do you want me to do that next?
