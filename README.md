@@ -31,8 +31,6 @@ Focus: Attack Simulation • SIEM Detection • Incident Investigation
 19. [Incident Response Actions](#incident-response-actions)
 20. [Technologies Used](#technologies-used)
 21. [Skills Demonstrated](#skills-demonstrated)
-22. [Future Improvements](#future-improvements)
-23. [Author](#author)
 
 ---
 
