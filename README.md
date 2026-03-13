@@ -112,7 +112,7 @@ The simulated adversary executes a multi-stage attack chain to replicate real-wo
 The attacker executes a malicious encoded PowerShell payload.
 
 ```powershell
-powershell -enc <encoded_payload>
+powershell -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAiAEMAbwBtAHAAcgBvAG0AaQBzAGUAZAAiAA==
 ```
 
 MITRE Technique: T1059 – Command and Scripting Interpreter
