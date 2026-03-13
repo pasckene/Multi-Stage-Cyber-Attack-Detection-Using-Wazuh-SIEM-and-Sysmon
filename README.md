@@ -1,5 +1,3 @@
----
-
 # Multi-Stage Cyber Attack Detection Using Wazuh SIEM and Sysmon
 
 ```text
