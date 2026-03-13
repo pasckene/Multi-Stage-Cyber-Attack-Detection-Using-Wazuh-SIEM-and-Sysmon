@@ -119,7 +119,7 @@ powershell -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAiAEMAbwBtAHAAcgBvAG0AaQBzAGUA
 
 This simulates PowerShell malware execution using Base64 encoding.
 
-Attackers frequently encode commands to bypass detection and gain a foothold over the machine.
+Adversaries frequently employ obfuscation such as command encoding to bypass security controls and gain initial access to the target environment.
 
 MITRE Technique
 
