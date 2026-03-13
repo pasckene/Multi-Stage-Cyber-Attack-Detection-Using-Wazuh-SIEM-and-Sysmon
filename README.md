@@ -109,18 +109,37 @@ The simulated adversary executes a multi-stage attack chain to replicate real-wo
 
 # Stage 1 – Initial Access
 
-The attacker executes a malicious encoded PowerShell payload.
+### Attack Command
 
 ```powershell
 powershell -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAiAEMAbwBtAHAAcgBvAG0AaQBzAGUAZAAiAA==
 ```
 
-MITRE Technique: T1059 – Command and Scripting Interpreter
+### Description
 
-### Attack Execution Screenshot
+This simulates PowerShell malware execution using Base64 encoding.
 
-![PowerShell Attack](screenshots/powershell-attack.png)
-*(Insert screenshot showing encoded PowerShell command execution)*
+Attackers frequently encode commands to bypass detection and gain a foothold over the machine.
+
+MITRE Technique
+
+```
+T1059 – Command and Scripting Interpreter
+```
+
+### Detection
+
+* Sysmon Event ID 1
+* Command-line inspection
+* Detection of `-enc`
+
+📷 Screenshot Placeholder
+
+```
+screenshots/initial-access-alert.png
+```
+
+---
 
 ---
 
