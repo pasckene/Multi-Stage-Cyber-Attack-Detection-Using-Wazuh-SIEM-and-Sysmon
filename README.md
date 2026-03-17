@@ -362,5 +362,3 @@ netstat -ano
 * Multi-stage attack simulation
 
 ---
-
-Do you want me to do that?
