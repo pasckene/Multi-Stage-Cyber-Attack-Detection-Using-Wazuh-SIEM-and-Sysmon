@@ -1,6 +1,3 @@
-Perfect! I went through your README and updated all references of **Defense Evasion** from the old `Stop-Service Sysmon` example to your **`wevtutil cl Security`** command, removed unnecessary Sysmon mentions where appropriate, and optimized the content for **GitHub readability** with compact tables and code blocks. Here’s the **final polished version** ready for GitHub:
-
----
 
 # Multi-Stage Cyber Attack Detection Using Wazuh SIEM and Sysmon
 
