@@ -179,46 +179,62 @@ MITRE Technique: T1053 – Scheduled Task
 
 ---
 
+## **Stage 4 – Defense Evasion**
 
+The attacker attempts to impair system defenses by **removing forensic evidence**, specifically by clearing Windows event logs to hinder detection and incident response.
 
-## 🔴 Stage 4 – Defense Evasion
-
-The attacker attempts to impair system defenses by disabling security monitoring mechanisms, specifically targeting real-time protection to reduce detection visibility.
+---
 
 ### 💻 Command Executed
 
 ```powershell
-Set-MpPreference -DisableRealtimeMonitoring $true
+wevtutil cl Security
 ```
 
 ---
 
 ### 🎯 Objective
 
-To disable **Microsoft Defender’s real-time monitoring**, allowing malicious activities to execute without immediate detection.
+To **erase the Security Event Log**, removing records of authentication events, privilege use, and other critical activities—thereby reducing the defender’s visibility into attacker actions.
 
 ---
 
 ### 🧠 MITRE ATT&CK Mapping
 
 * **Technique:** T1562 – Impair Defenses
-* **Sub-technique:** T1562.001 – Disable or Modify Security Tools
+* **Sub-technique:** T1562.002 – Disable Windows Event Logging *(closest related)*
+* **Also Related:** T1070.001 – Indicator Removal on Host: Clear Windows Event Logs
 
 ---
 
 ### 📡 Expected Telemetry
 
-* **Event Source:** PowerShell / Windows Defender
-* **Relevant Logs:**
+#### **Event Source: Windows Event Logs / PowerShell**
 
-  * PowerShell Script Block Logging (Event ID 4104)
-  * Windows Defender Operational Logs
-* **Sysmon:**
+**Relevant Logs:**
 
-  * Event ID 1 (Process Creation – PowerShell execution)
+* **Security Log Cleared**
+
+  * **Event ID 1102** → *“The audit log was cleared”* (VERY HIGH signal)
+
+* **System Log**
+
+  * **Event ID 104** → Log file cleared
+
+* **PowerShell Logging**
+
+  * **Event ID 4104** → Script block logging (captures `wevtutil cl Security` if enabled)
 
 ---
 
+### 🔍 Sysmon Telemetry
+
+* **Event ID 1 (Process Creation)**
+
+  * Image: `wevtutil.exe`
+  * CommandLine: `wevtutil cl Security`
+
+---
 
 ### Defense Evasion Screenshot
 
