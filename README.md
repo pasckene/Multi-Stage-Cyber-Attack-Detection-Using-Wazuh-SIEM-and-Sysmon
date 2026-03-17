@@ -1,6 +1,12 @@
 
 # Multi-Stage Cyber Attack Detection Using Wazuh SIEM and Sysmon
 
+![MITRE ATT\&CK](https://img.shields.io/badge/MITRE-ATT%26CK-blue?logo=mitre)
+![Detection Engineering](https://img.shields.io/badge/Detection-Engineering-yellow)
+![SOC Lab Project](https://img.shields.io/badge/SOC-Lab-red)
+![Windows](https://img.shields.io/badge/Windows-11-blue?logo=windows)
+![Wazuh](https://img.shields.io/badge/SIEM-Wazuh-green)
+
 ```text
 Project Type: SOC Detection Engineering Lab
 Framework: MITRE ATT&CK
