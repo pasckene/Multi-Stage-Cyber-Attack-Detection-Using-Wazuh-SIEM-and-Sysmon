@@ -24,14 +24,11 @@ Focus: Attack Simulation • SIEM Detection • Incident Investigation
 11. [Correlation Rules](#correlation-rules)
 12. [Threat Hunting Queries](#threat-hunting-queries)
 13. [Indicators of Compromise (IOCs)](#indicators-of-compromise-iocs)
-14. [Attack Timeline](#attack-timeline)
-15. [Detection Logic Explanation](#detection-logic-explanation)
-16. [Purple Team Validation](#purple-team-validation)
-17. [Detection Coverage Matrix](#detection-coverage-matrix)
-18. [SOC Investigation Workflow](#soc-investigation-workflow)
-19. [Incident Response Actions](#incident-response-actions)
-20. [Technologies Used](#technologies-used)
-21. [Skills Demonstrated](#skills-demonstrated)
+14. [Detection Coverage Matrix](#detection-coverage-matrix)
+15. [SOC Investigation Workflow](#soc-investigation-workflow)
+16. [Incident Response Actions](#incident-response-actions)
+17. [Technologies Used](#technologies-used)
+18. [Skills Demonstrated](#skills-demonstrated)
 
 ---
 
