@@ -179,15 +179,46 @@ MITRE Technique: T1053 – Scheduled Task
 
 ---
 
-# Stage 4 – Defense Evasion
 
-The attacker attempts to disable monitoring tools.
 
-```text
-Stop-Service Sysmon
+## 🔴 Stage 4 – Defense Evasion
+
+The attacker attempts to impair system defenses by disabling security monitoring mechanisms, specifically targeting real-time protection to reduce detection visibility.
+
+### 💻 Command Executed
+
+```powershell
+Set-MpPreference -DisableRealtimeMonitoring $true
 ```
 
-MITRE Technique: T1562 – Impair Defenses
+---
+
+### 🎯 Objective
+
+To disable **Microsoft Defender’s real-time monitoring**, allowing malicious activities to execute without immediate detection.
+
+---
+
+### 🧠 MITRE ATT&CK Mapping
+
+* **Technique:** T1562 – Impair Defenses
+* **Sub-technique:** T1562.001 – Disable or Modify Security Tools
+
+---
+
+### 📡 Expected Telemetry
+
+* **Event Source:** PowerShell / Windows Defender
+* **Relevant Logs:**
+
+  * PowerShell Script Block Logging (Event ID 4104)
+  * Windows Defender Operational Logs
+* **Sysmon:**
+
+  * Event ID 1 (Process Creation – PowerShell execution)
+
+---
+
 
 ### Defense Evasion Screenshot
 
