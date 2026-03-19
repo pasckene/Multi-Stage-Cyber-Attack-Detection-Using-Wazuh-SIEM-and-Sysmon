@@ -240,9 +240,9 @@ nc -lvnp 4444
 
 ```xml
 <rule id="100100" level="12">
-  <if_sid>61600</if_sid>
-  <match>-enc</match>
-  <description>Encoded PowerShell command detected</description>
+  <if_sid>61603</if_sid> <field name="win.eventdata.commandLine" type="pcre2">(?i)-enc|-encodedcommand|-e\b</field>
+  <description>Encoded PowerShell command detected: $(win.eventdata.commandLine)</description>
+  <group>sysmon_event1,powershell_execution,</group>
 </rule>
 ```
 
