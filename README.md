@@ -135,9 +135,7 @@ T1059 – Command and Scripting Interpreter
 ### Commands
 
 ```text
-whoami
-net user
-ipconfig
+net localgroup administrators /add
 ```
 
 **Telemetry Source:** Sysmon Event ID 1
@@ -245,22 +243,72 @@ nc -lvnp 4444
   <group>sysmon_event1,powershell_execution,</group>
 </rule>
 ```
+### Execution
+
+```xml
+<rule id="100102" level="12">
+  <if_sid>61603</if_sid>
+  <field name="win.eventdata.commandLine" type="pcre2">(?i)net(\d)?\.exe\s+localgroup\s+administrators\s+.*\s+/add</field>
+  <description>Critical: User added to Local Administrators group via Net.exe</description>
+  <group>sysmon_event1,privilege_escalation,persistence</group>
+</rule>
+```
 
 ### Scheduled Task Persistence Detection
 
 ```xml
-<rule id="100101" level="10">
-  <if_sid>18107</if_sid>
-  <description>Suspicious scheduled task created</description>
+<rule id="100104" level="12">
+  <if_sid>61603</if_sid>
+  <field name="win.eventdata.commandLine" type="pcre2">(?i)schtasks(\.exe)?\s+/create\s+.*\/sc\s+minute</field>
+  <description>Suspicious Scheduled Task Creation: High-frequency persistence detected</description>
+  <group>sysmon_event1,persistence,t1053.005</group>
+</rule>
+```
+```xml
+<rule id="100105" level="10">
+  <if_sid>60103</if_sid> <field name="win.system.eventID">^4698$</field>
+  <field name="win.eventdata.taskName" type="pcre2">(?i)updater|bypass|sys|admin</field>
+  <description>New Scheduled Task Created: $(win.eventdata.taskName)</description>
+  <group>windows,persistence,scheduled_task</group>
 </rule>
 ```
 
 ### Defense Evasion Detection
 
 ```xml
-<rule id="100102" level="12">
-  <match>wevtutil cl Security</match>
-  <description>Windows event log clearing detected</description>
+<rule id="100106" level="12">
+  <if_sid>61603</if_sid>
+  <field name="win.eventdata.commandLine" type="pcre2">(?i)wevtutil(\.exe)?\s+cl\s+(Security|System|Application|Setup)</field>
+  <description>Critical: Windows Event Log Cleared via wevtutil (Defense Evasion)</description>
+  <group>sysmon_event1,defense_evasion,t1070.001</group>
+</rule>
+```
+
+```xml
+<rule id="100107" level="13">
+  <if_sid>60103</if_sid>
+  <field name="win.system.eventID">^1102$|^104$</field>
+  <description>Alert: A Windows Event Log was cleared ($(win.eventdata.accountName))</description>
+  <group>windows,defense_evasion,audit_log_cleared</group>
+</rule>
+```
+
+### Command and control
+
+```xml
+<rule id="100108" level="14">
+  <if_sid>61603</if_sid>
+  <field name="win.eventdata.commandLine" type="pcre2">(?i)ncat(\.exe)?\s+.*\s+(--exec|-e)\s+cmd(\.exe)?</field>
+  <description>Critical: Reverse Shell detected via Ncat (Remote Command Execution)</description>
+  <group>sysmon_event1,command_and_control,t1059.003</group>
+</rule>
+```
+
+```xml
+<rule id="100109" level="10">
+  <if_sid>61605</if_sid> <field name="win.eventdata.destinationPort">^4444$|^5555$|^8888$|^9999$</field>
+  <description>Suspicious outbound network connection on common shell port: $(win.eventdata.destinationPort)</description>
+  <group>sysmon_event3,network_connection,c2</group>
 </rule>
 ```
 
@@ -269,11 +317,13 @@ nc -lvnp 4444
 # Correlation Rules
 
 ```xml
-<rule id="100200" level="15" frequency="3" timeframe="120">
-  <if_matched_sid>100100</if_matched_sid>
-  <if_matched_sid>100101</if_matched_sid>
-  <if_matched_sid>100102</if_matched_sid>
-  <description>Multi-stage attack behavior detected</description>
+<rule id="100200" level="15">
+  <if_matched_sid>100100, 100101, 100102, 100104, 100108</if_matched_sid>
+  <same_agent />
+  <frequency>3</frequency>
+  <timeframe>3600</timeframe>
+  <description>Composite Alert: Multiple Stage Attack Pattern Detected on $(hostname)</description>
+  <group>correlation,attack_progression</group>
 </rule>
 ```
 
