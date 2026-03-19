@@ -126,8 +126,7 @@ T1059 – Command and Scripting Interpreter
 * Process creation logging
 * Command-line inspection (`-enc` detection)
 
-📷 Screenshot Placeholder: `screenshots/initial-access-alert.png`
-
+![Initial-access-alert](images/bash_simulations.png)
 ---
 
 # Stage 2 – Execution
@@ -142,7 +141,8 @@ net localgroup administrators /add
 
 ### Screenshot
 
-![Recon Commands](screenshots/recon-commands.png)
+![localgroup.png](images/localgroup.png)
+![localgroup.png](images/localgroup2.png)
 
 ---
 
