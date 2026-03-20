@@ -157,9 +157,10 @@ schtasks /create /sc minute /tn updater /tr malware.exe
 
 **MITRE Technique:** T1053 – Scheduled Task
 
-### Screenshot
 
-![Persistence](screenshots/persistence-task.png)
+![Persistence](images/sctask1.png)
+![Persistence](images/sctask2.png)
+![Persistence](images/sctask3.png)
 
 ---
 
@@ -198,7 +199,9 @@ wevtutil cl Security
 
 ### Screenshot
 
-![Defense Evasion](screenshots/sysmon-stop.png)
+![Defense Evasion](images/clea1.png)
+![Defense Evasion](images/clea2.png)
+![Defense Evasion](images/clea3.png)
 
 ---
 
@@ -229,7 +232,9 @@ nc -lvnp 4444
 
 ### Screenshot
 
-![Reverse Shell](screenshots/reverse-shell.png)
+![Reverse Shell](images/nc1.png)
+![Reverse Shell](images/nc2.png)
+![Reverse Shell](images/nc3.png)
 
 ---
 
