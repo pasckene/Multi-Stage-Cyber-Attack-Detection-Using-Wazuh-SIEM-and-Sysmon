@@ -126,7 +126,8 @@ T1059 – Command and Scripting Interpreter
 * Process creation logging
 * Command-line inspection (`-enc` detection)
 
-![Initial-access-alert](images/bash_simulations.png)
+![Initial-access-alert](images/wazuh-enc1.png)
+![Initial-access-alert](images/wazuh-enc2.png)
 ---
 
 # Stage 2 – Execution
