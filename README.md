@@ -70,9 +70,7 @@ Wazuh Dashboard
 
 ### Architecture Screenshot
 
-![Lab Architecture](screenshots/lab-architecture.png)
-
-*(Insert diagram showing attacker, victim, and Wazuh manager)*
+![Lab Architecture](images/Architecture.png)
 
 ---
 
